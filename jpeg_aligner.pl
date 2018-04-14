@@ -8,14 +8,16 @@ use Data::Dumper;
 
 use strict;
 
-# By how many seconds the camera differs from real time
+# By how many seconds the camera is ahead of real time
 my %camera_shift_seconds_map = (
   'samsung_SM-G900H' => 0,
   'Apple_iPhone_4' => 0,
-  'Canon_Canon_EOS_DIGITAL_REBEL_XSi' => 6956,
+  'Apple_iPhone_7' => 0,
+  'Canon_EOS_DIGITAL_REBEL_XSi' => 7381,
   'LGE_Nexus_4' => 0,
-  'OnePlus_ONEPLUS_A3000' => 0,
-  'Panasonic_DMC-ZS100' => 4172
+  'OnePlus_A3000' => 0,
+  'OnePlus_A5000' => 0,
+  'Panasonic_DMC-ZS100' => 470
 );
 
 #-------------------------------------------------------------------------------
@@ -63,9 +65,22 @@ sub getMakeModel($)
   my $exif= $image->get_Exif_data('IMAGE_DATA');
   my $make= $exif->{'Make'}[0];
   my $model= $exif->{'Model'}[0];
+  $make =~ s/[^[:print:]]//g;
+  $make =~ s/[\s]/_/g;
+  $model =~ s/[^[:print:]]//g;
+  $model =~ s/[\s]/_/g;
+  if (length($make) >= 2)
+  {
+    print "LC model: \"" . lc($model) . "\"\n";
+    print "LC make \"" . lc($make) . "\"\n";
+    print "Make in MODEL index: " . index(lc($model), lc($make)) . "\n";
+    my $make_in_model_index= index(lc($model), lc($make));
+    if ($make_in_model_index >= 0)
+    {
+      $model= substr($model, $make_in_model_index + length($make) + 1);
+    }
+  }
   my $make_model= "${make}_${model}";
-  $make_model =~ s/[^[:print:]]//g;
-  $make_model =~ s/[\s]/_/g;
   return $make_model;
 }
 
@@ -93,7 +108,7 @@ sub makeModelShift($)
 #-------------------------------------------------------------------------------
 sub usage()
 {
-  return "Please run: \"perl $0 <source path> <destination path>\" to convert pictures\n";
+  return "\nPlease update \"camera_shift_seconds_map\" variable\nThen run: \"perl $0 <source path> <destination path>\" to convert pictures\n";
 }
 
 ################################################################################
