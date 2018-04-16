@@ -2,7 +2,6 @@
 
 use Image::MetaData::JPEG;
 use Time::Local;
-use String::Escape qw( printable unprintable );
 use POSIX 'strftime';
 use Data::Dumper;
 
