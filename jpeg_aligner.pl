@@ -1,4 +1,5 @@
 #!/usr/bin/perl
+# Copyright (c) Volodymyr Kleban
 
 use Image::MetaData::JPEG;
 use Time::Local;
