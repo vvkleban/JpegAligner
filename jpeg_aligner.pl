@@ -71,9 +71,6 @@ sub getMakeModel($)
   $model =~ s/[\s]/_/g;
   if (length($make) >= 2)
   {
-    print "LC model: \"" . lc($model) . "\"\n";
-    print "LC make \"" . lc($make) . "\"\n";
-    print "Make in MODEL index: " . index(lc($model), lc($make)) . "\n";
     my $make_in_model_index= index(lc($model), lc($make));
     if ($make_in_model_index >= 0)
     {
