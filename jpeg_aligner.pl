@@ -96,8 +96,8 @@ sub makeModelShift($)
   }
   else
   {
-    print "Failed finding camera '$make_model' on my list!\n";
-    exit 1;
+    print "Failed finding camera '$make_model' on my list! Assuming 0 time shift\n";
+    return 0;
   }
 
 }
