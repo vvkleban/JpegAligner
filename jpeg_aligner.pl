@@ -13,7 +13,7 @@ my %camera_shift_seconds_map = (
   'samsung_SM-G900H' => 0,
   'Apple_iPhone_4' => 0,
   'Apple_iPhone_7' => 0,
-  'Canon_EOS_DIGITAL_REBEL_XSi' => 7381,
+  'Canon_EOS_DIGITAL_REBEL_XSi' => -17680,
   'LGE_Nexus_4' => 0,
   'OnePlus_A3000' => 0,
   'OnePlus_A5000' => 0,
@@ -43,8 +43,8 @@ sub getEpoch($)
 {
   my $image= shift;
   debug_dump($image->get_Exif_data('IMAGE_DATA'));
-  my $time_string= $image->get_Exif_data('IMAGE_DATA')->{'DateTime'}[0];
-  debug( "$time_string\n" );
+  my $time_string= $image->get_Exif_data('IMAGE_DATA')->{'DateTimeOriginal'}[0];
+  debug( "Metadata module date: $time_string\n" );
   my ($year, $month, $date, $hour, $minute, $second);
   # 2017:03:29 00:19:14
   if (my ($year, $month, $date, $hour, $minute, $second) =
