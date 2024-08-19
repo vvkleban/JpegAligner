@@ -17,7 +17,7 @@ my %camera_shift_seconds_map = (
   'LGE_Nexus_4' => 0,
   'OnePlus_A3000' => 0,
   'OnePlus_A5000' => 0,
-  'Panasonic_DMC-ZS100' => 588
+  'Panasonic_DMC-ZS100' => -3012
 );
 
 #-------------------------------------------------------------------------------
