@@ -13,7 +13,7 @@ my %camera_shift_seconds_map = (
   'samsung_SM-G900H' => 0,
   'Apple_iPhone_4' => 0,
   'Apple_iPhone_7' => 0,
-  'Canon_EOS_DIGITAL_REBEL_XSi' => 7381,
+  'Canon_EOS_DIGITAL_REBEL_XSi' => -17680,
   'LGE_Nexus_4' => 0,
   'OnePlus_A3000' => 0,
   'OnePlus_A5000' => 0,
@@ -34,6 +34,19 @@ sub debug_dump($) {
 #  print Dumper shift;
 }
 
+sub timeStringToTime($)
+{
+  my $time_string= shift;
+  if (my ($year, $month, $date, $hour, $minute, $second) =
+    $time_string =~ /(\d+)\D(\d+)\D(\d+)\D(\d+)\D(\d+)\D(\d+)/)
+  {
+    $month--;
+    return timelocal($second, $minute, $hour, $date, $month, $year);
+  }
+  return -1;
+}
+
+
 #-------------------------------------------------------------------------------
 # get epoch time of when the image was taken according to the camera
 # args:   JPEG object
@@ -43,17 +56,16 @@ sub getEpoch($)
 {
   my $image= shift;
   debug_dump($image->get_Exif_data('IMAGE_DATA'));
-  my $time_string= $image->get_Exif_data('IMAGE_DATA')->{'DateTime'}[0];
-  debug( "$time_string\n" );
-  my ($year, $month, $date, $hour, $minute, $second);
-  # 2017:03:29 00:19:14
-  if (my ($year, $month, $date, $hour, $minute, $second) =
-        $time_string =~ /(\d+)\D(\d+)\D(\d+)\D(\d+)\D(\d+)\D(\d+)/)
+  my $time_string= $image->get_Exif_data('IMAGE_DATA')->{'DateTimeOriginal'}[0];
+  debug( "Metadata module date: $time_string\n" );
+  my $time_local= timeStringToTime($time_string);
+  if ($time_local < 1000000000) # date less than 2001-09-09
   {
-    $month--;
-    return timelocal($second, $minute, $hour, $date, $month, $year);
+    $time_string= $image->get_Exif_data('IMAGE_DATA')->{'DateTime'}[0];
+    debug( "DateTimeOriginal did not work. Let's try DateTime: $time_string\n" );
+    $time_local= timeStringToTime($time_string);
   }
-  return -1;
+  return $time_local;
 }
 
 #-------------------------------------------------------------------------------
